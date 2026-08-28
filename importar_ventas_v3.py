@@ -24,7 +24,7 @@ import psycopg2
 # CONFIGURACIÓN DE CONEXIÓN A LA CASA MATRIZ
 # ==============================================================================
 DB_CONFIG = {
-    "host": "localhost",       # <--- CAMBIAR a "postgres-matriz" para la Prueba C
+    "host": "postgres-matriz",  # <--- Prueba C: dentro de la red interna
     "port": "5432",
     "database": "matriz_db",
     "user": "ucom_admin",
