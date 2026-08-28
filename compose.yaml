@@ -1,0 +1,106 @@
+version: "3.9"
+
+# ==============================================================================
+# CPD CORPORATIVO - UCOM - Procesamiento de Datos
+# 4 nodos Postgres: Casa Matriz (Asunción, central) + 3 sucursales
+# ==============================================================================
+
+services:
+
+  # ------------------------------------------------------------------
+  # NODO 1: Casa Matriz (Asunción) - Base de datos central del CPD
+  # Nombre de servicio (DNS interno): postgres-matriz
+  # Nombre de contenedor (para docker exec / docker cp): cpd-matriz-db
+  # ------------------------------------------------------------------
+  postgres-matriz:
+    image: postgres:15-alpine
+    container_name: cpd-matriz-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: matriz_db
+      POSTGRES_USER: ucom_admin
+      POSTGRES_PASSWORD: password_matriz
+    ports:
+      - "5432:5432"   # único nodo expuesto al Host (Codespaces)
+    volumes:
+      - matriz_data:/var/lib/postgresql/data
+    networks:
+      - red_empresarial
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ucom_admin -d matriz_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ------------------------------------------------------------------
+  # NODO 2: Sucursal CDE
+  # ------------------------------------------------------------------
+  postgres-cde:
+    image: postgres:15-alpine
+    container_name: cpd-cde-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sucursal_cde_db
+      POSTGRES_USER: ucom_admin
+      POSTGRES_PASSWORD: password_sucursal
+    volumes:
+      - cde_data:/var/lib/postgresql/data
+    networks:
+      - red_empresarial
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ucom_admin -d sucursal_cde_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ------------------------------------------------------------------
+  # NODO 3: Sucursal Encarnación
+  # ------------------------------------------------------------------
+  postgres-encarnacion:
+    image: postgres:15-alpine
+    container_name: cpd-enc-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sucursal_enc_db
+      POSTGRES_USER: ucom_admin
+      POSTGRES_PASSWORD: password_sucursal
+    volumes:
+      - enc_data:/var/lib/postgresql/data
+    networks:
+      - red_empresarial
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ucom_admin -d sucursal_enc_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ------------------------------------------------------------------
+  # NODO 4: Sucursal Coronel Oviedo
+  # ------------------------------------------------------------------
+  postgres-coronel-oviedo:
+    image: postgres:15-alpine
+    container_name: cpd-cnel-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sucursal_cnel_db
+      POSTGRES_USER: ucom_admin
+      POSTGRES_PASSWORD: password_sucursal
+    volumes:
+      - cnel_data:/var/lib/postgresql/data
+    networks:
+      - red_empresarial
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ucom_admin -d sucursal_cnel_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  red_empresarial:
+    driver: bridge
+
+volumes:
+  matriz_data:
+  cde_data:
+  enc_data:
+  cnel_data:
