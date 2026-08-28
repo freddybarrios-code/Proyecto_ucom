@@ -1,4 +1,4 @@
-# Laboratorio: Hardening de PostgreSQL y pg_hba.conf — CPD Corporativo (UCOM)
+# Laboratorio (UCOM)
 
 Estructura de archivos requerida por la rúbrica (Ítem 1, 4 Ptos):
 
